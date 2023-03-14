@@ -6,10 +6,7 @@ import lombok.Getter;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @TestConfiguration
 public class DRGTestConfig {
@@ -25,11 +22,6 @@ public class DRGTestConfig {
     @Bean
     MetaFunction<List<TestEntity>> getTestMetaFunction() {
         return new MetaFunction<>() {
-            @Override
-            public List<Class<?>> getArgTypes() {
-                return List.of(String.class, String.class, String.class, Integer.class);
-            }
-
             @Override
             public List<TestEntity> compute(Map<String, String> params, List<?> args) {
                 String firstField = (String) args.get(0);
@@ -57,6 +49,11 @@ public class DRGTestConfig {
             public List<TestEntity> getTestValue() {
                 TestEntity testEntity = new TestEntity("firstField", "secondField", "thirdField");
                 return Collections.nCopies(3, testEntity);
+            }
+
+            @Override
+            public void validateInput(List<Class<?>> argTypes, Set<String> params) {
+
             }
         };
     }

@@ -5,15 +5,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 public class ParamMF implements MetaFunction<String> {
-
-    @Override
-    public List<Class<?>> getArgTypes() {
-        return List.of(String.class);
-    }
-
     @Override
     public String compute(Map<String, String> params, List<?> args) {
         return params.get(args.get(0));
@@ -32,5 +27,10 @@ public class ParamMF implements MetaFunction<String> {
     @Override
     public String getTestValue() {
         return "testParam";
+    }
+
+    @Override
+    public void validateInput(List<Class<?>> argTypes, Set<String> params) {
+
     }
 }

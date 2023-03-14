@@ -5,14 +5,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 public class KeyValueMF implements MetaFunction<Map.Entry> {
-
-    @Override
-    public List<Class<?>> getArgTypes() {
-        return List.of(Object.class, Object.class);
-    }
 
     @Override
     public Map.Entry compute(Map<String, String> params, List<?> args) {
@@ -32,5 +28,9 @@ public class KeyValueMF implements MetaFunction<Map.Entry> {
     @Override
     public String getMetaAlias() {
         return "keyValue";
+    }
+
+    @Override
+    public void validateInput(List<Class<?>> argTypes, Set<String> params) {
     }
 }
