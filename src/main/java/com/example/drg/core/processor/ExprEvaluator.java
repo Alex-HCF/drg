@@ -2,7 +2,7 @@ package com.example.drg.core.processor;
 
 import com.example.drg.core.config.MetaConfig;
 import com.example.drg.core.config.MetaFunction;
-import com.example.drg.core.exception.MetaProcessorException;
+import com.example.drg.core.exception.EvaluatorException;
 import com.example.drg.core.lang.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class ExprEvaluator {
             ExprDescriptor exprDescriptor = parser.parseExpr(tokens);
             return Map.entry(exprDescriptor.getVarName(), calcFunc(exprDescriptor.getFuncDescriptor(), params));
         } catch (Exception e) {
-            throw new MetaProcessorException(String.format("Error during processing a expr %s", expr), e);
+            throw new EvaluatorException(expr, e);
         }
     }
 

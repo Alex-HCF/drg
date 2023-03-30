@@ -20,21 +20,21 @@ class TokenizerTest {
 
     List<Token> getExpected() {
         return List.of(
-                new Token(Token.Type.VAR, "var1"),
-                new Token(Token.Type.EQUAL, "="),
-                new Token(Token.Type.FUNC_NAME, "func1"),
-                new Token(Token.Type.OPEN_BRACKET, "("),
-                new Token(Token.Type.ARG, "'hello'"),
-                new Token(Token.Type.COMMA, ","),
-                new Token(Token.Type.FUNC_NAME, "func2"),
-                new Token(Token.Type.OPEN_BRACKET, "("),
-                new Token(Token.Type.ARG, "'bye'"),
-                new Token(Token.Type.CLOSED_BRACKET, ")"),
-                new Token(Token.Type.COMMA, ","),
-                new Token(Token.Type.FUNC_NAME, "func3"),
-                new Token(Token.Type.OPEN_BRACKET, "("),
-                new Token(Token.Type.CLOSED_BRACKET, ")"),
-                new Token(Token.Type.CLOSED_BRACKET, ")")
+                new Token(Token.Type.VAR, "var1", 2),
+                new Token(Token.Type.EQUAL, "=", 7),
+                new Token(Token.Type.FUNC_NAME, "func1", 9),
+                new Token(Token.Type.OPEN_BRACKET, "(", 14),
+                new Token(Token.Type.ARG, "'hello'", 15),
+                new Token(Token.Type.COMMA, ",", 22),
+                new Token(Token.Type.FUNC_NAME, "func2", 24),
+                new Token(Token.Type.OPEN_BRACKET, "(", 30),
+                new Token(Token.Type.ARG, "'bye'", 31),
+                new Token(Token.Type.CLOSED_BRACKET, ")", 36),
+                new Token(Token.Type.COMMA, ",", 37),
+                new Token(Token.Type.FUNC_NAME, "func3", 39),
+                new Token(Token.Type.OPEN_BRACKET, "(", 45),
+                new Token(Token.Type.CLOSED_BRACKET, ")", 46),
+                new Token(Token.Type.CLOSED_BRACKET, ")", 47)
         );
     }
 }

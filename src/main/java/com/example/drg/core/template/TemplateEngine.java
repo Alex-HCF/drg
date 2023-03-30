@@ -1,7 +1,8 @@
 package com.example.drg.core.template;
 
 import com.example.drg.core.config.XhtmlConverter;
-import com.example.drg.core.exception.MetaException;
+import com.example.drg.core.exception.DRGException;
+import com.example.drg.core.exception.TemplateEngineException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -28,9 +29,9 @@ public class TemplateEngine {
             String htmlDocument = generateXHtml(template.getHtmlTemplate(), model);
             return converter.convert(htmlDocument, template);
         } catch (IOException e) {
-            throw new MetaException("Error during template reading", e);
+            throw new TemplateEngineException("Error during template reading", e);
         } catch (TemplateException e) {
-            throw new MetaException("Error during template processing", e);
+            throw new TemplateEngineException("Error during template processing", e);
         }
     }
 

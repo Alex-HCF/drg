@@ -30,4 +30,5 @@ public class Token {
 
     Type type;
     String value;
+    int originalPosition;
 }

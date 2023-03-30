@@ -1,9 +1,11 @@
 package com.example.drg.core.config;
 
+import com.example.drg.core.exception.MFNotFoundException;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -15,12 +17,8 @@ public class MetaConfig {
         this.functions = functions.stream().collect(Collectors.toMap(MetaFunction::getMetaAlias, f -> f));
     }
 
-    public MetaFunction<?> getMetaFunction(String metaFunction) {
-        return functions.get(metaFunction);
+    public MetaFunction<?> getMetaFunction(String funcName) {
+        MetaFunction<?> metaFunction = functions.get(funcName);
+        return Optional.ofNullable(metaFunction).orElseThrow(() -> new MFNotFoundException(funcName));
     }
-
-    public boolean containsMetaFunction(String metaFunction) {
-        return functions.containsKey(metaFunction);
-    }
-
 }

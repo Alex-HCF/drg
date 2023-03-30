@@ -1,6 +1,7 @@
 package com.example.drg.core.lang;
 
-import com.example.drg.core.exception.MetaParserException;
+import com.example.drg.core.exception.UnclosedBracketException;
+import com.example.drg.core.exception.UnmatchedBracketException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -61,7 +62,7 @@ public class Parser {
             } else if (token.getType() == Token.Type.CLOSED_BRACKET) {
                 countOpenBracket--;
                 if (countOpenBracket < 0) {
-                    throw new MetaParserException("Unmatched open bracket");
+                    throw new UnmatchedBracketException(token.getOriginalPosition());
                 }
             }
             if (i > 1 && countOpenBracket == 0) {
@@ -71,10 +72,14 @@ public class Parser {
         }
 
         if (countOpenBracket > 0) {
-            throw new MetaParserException("Unclosed bracket");
+            throw new UnclosedBracketException(getPositionOfLastToken(tokens));
         }
 
         return tokens.subList(0, i + 1);
+    }
+
+    private int getPositionOfLastToken(List<Token> tokens){
+        return tokens.get(tokens.size() - 1).getOriginalPosition();
     }
 
     private String parseArg(String arg) {

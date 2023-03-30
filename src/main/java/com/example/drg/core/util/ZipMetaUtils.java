@@ -1,6 +1,7 @@
 package com.example.drg.core.util;
 
-import com.example.drg.core.exception.MetaException;
+import com.example.drg.core.exception.DRGException;
+import com.example.drg.core.exception.ZipException;
 import lombok.experimental.UtilityClass;
 
 import java.io.ByteArrayInputStream;
@@ -33,7 +34,7 @@ public class ZipMetaUtils {
 
             return result;
         } catch (Exception e) {
-            throw new MetaException("Error during unzip", e);
+            throw new ZipException("Error during unzip", e);
         }
     }
 }

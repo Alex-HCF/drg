@@ -1,12 +1,13 @@
 package com.example.drg.core.lang;
 
-import com.example.drg.core.exception.MetaTokenizerException;
+import com.example.drg.core.exception.UnexpectedTokenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -36,12 +37,7 @@ public class Tokenizer {
                 continue;
             }
 
-            Token token;
-            try {
-                token = parseToken(expr.substring(i), expected);
-            } catch (MetaTokenizerException e) {
-                throw new MetaTokenizerException(String.format("Not found expected token for expr '%s' at position %s, expected: %s", expr, i, expected));
-            }
+            Token token = parseTokenOrThrow(expr, expected, i);
             tokens.add(token);
             expected = order.get(token.getType());
 
@@ -53,15 +49,19 @@ public class Tokenizer {
         return tokens;
     }
 
-    private Token parseToken(String expr, List<Token.Type> expectedTypes) {
+    private Token parseTokenOrThrow(String expr, List<Token.Type> expectedTypes, int startPos){
+        return parseToken(expr.substring(startPos), expectedTypes, startPos)
+                .orElseThrow(() -> new UnexpectedTokenException(expr, startPos, expectedTypes));
+    }
 
+    private Optional<Token> parseToken(String expr, List<Token.Type> expectedTypes, final int startPos) {
         List<Token.Type> matches = expectedTypes.stream().filter(type -> expr.matches(type.getRegex())).collect(Collectors.toList());
         if (matches.size() == 1) { // found
-            return new Token(matches.get(0), expr);
+            return Optional.of(new Token(matches.get(0), expr, startPos));
         } else if (matches.isEmpty() && expr.length() >= 2) {
-            return parseToken(expr.substring(0, expr.length() - 1), expectedTypes);
+            return parseToken(expr.substring(0, expr.length() - 1), expectedTypes, startPos);
         } else {
-            throw new MetaTokenizerException();
+            return Optional.empty();
         }
     }
 }

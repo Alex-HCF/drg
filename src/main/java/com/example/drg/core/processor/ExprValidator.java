@@ -2,7 +2,7 @@ package com.example.drg.core.processor;
 
 import com.example.drg.core.config.MetaConfig;
 import com.example.drg.core.config.MetaFunction;
-import com.example.drg.core.exception.MetaProcessorException;
+import com.example.drg.core.exception.ValidatorException;
 import com.example.drg.core.lang.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class ExprValidator {
             validateFunc(exprDescriptor.getFuncDescriptor(), params);
             return Map.entry(exprDescriptor.getVarName(), getExampleValue(exprDescriptor.getFuncDescriptor()));
         } catch (Exception e) {
-            throw new MetaProcessorException(String.format("Error during processing the expr %s", expr), e);
+            throw new ValidatorException(expr, e);
         }
     }
 
