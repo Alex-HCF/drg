@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class UnclosedBracketException extends ParserException {
 
-  private int position;
+  private final int position;
 
   public UnclosedBracketException(int position) {
     super(String.format("Unclosed bracket at position %s", position));

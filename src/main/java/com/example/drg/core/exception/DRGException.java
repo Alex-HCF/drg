@@ -1,13 +1,13 @@
 package com.example.drg.core.exception;
 
 public abstract class DRGException extends RuntimeException {
-  public DRGException() {}
+  protected DRGException() {}
 
-  public DRGException(String message) {
+  protected DRGException(String message) {
     super(message);
   }
 
-  public DRGException(String message, Throwable cause) {
+  protected DRGException(String message, Throwable cause) {
     super(message, cause);
   }
 }

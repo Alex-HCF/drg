@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class MFNotFoundException extends RuntimeException {
 
-  private String funcName;
+  private final String funcName;
 
   public MFNotFoundException(String funcName) {
     super(String.format("Meta function %s not found", funcName));
