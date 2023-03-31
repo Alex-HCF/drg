@@ -34,11 +34,13 @@ public class IntMF implements MetaFunction<Integer> {
   @Override
   public void validateInput(List<Class<?>> argTypes, Set<String> params) {
     if (argTypes.size() != 1) {
-      throw new MFException("Int function expects one arg");
+      throw new MFException(
+          String.format(
+              "The number of args should be no more than one, found %s", argTypes.size()));
     }
 
     if (argTypes.get(0) != String.class) {
-      throw new MFException("Int function expect arg of type String");
+      throw new MFException("The function expects arg of type String");
     }
   }
 }

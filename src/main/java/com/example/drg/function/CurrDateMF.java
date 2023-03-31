@@ -1,6 +1,7 @@
 package com.example.drg.function;
 
 import com.example.drg.core.config.MetaFunction;
+import com.example.drg.core.exception.MFException;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -31,5 +32,11 @@ public class CurrDateMF implements MetaFunction<Date> {
   }
 
   @Override
-  public void validateInput(List<Class<?>> argTypes, Set<String> params) {}
+  public void validateInput(List<Class<?>> argTypes, Set<String> params) {
+    if (!argTypes.isEmpty()) {
+      throw new MFException(
+          String.format(
+              "The number of args should be no more than zero, found %s", argTypes.size()));
+    }
+  }
 }

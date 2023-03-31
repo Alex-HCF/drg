@@ -9,25 +9,26 @@ import java.util.Map;
 import java.util.Set;
 
 @Component
-public class ParamMF implements MetaFunction<String> {
+public class DoubleMF implements MetaFunction<Double> {
+
   @Override
-  public String compute(Map<String, String> params, List<?> args) {
-    return params.get(args.get(0));
+  public Double compute(Map<String, String> params, List<?> args) {
+    return Double.parseDouble((String) args.get(0));
   }
 
   @Override
   public String getMetaAlias() {
-    return "param";
+    return "double";
   }
 
   @Override
-  public Class<String> getReturnedType() {
-    return String.class;
+  public Class<Double> getReturnedType() {
+    return Double.class;
   }
 
   @Override
-  public String getTestValue() {
-    return "testParam";
+  public Double getTestValue() {
+    return 123.123;
   }
 
   @Override
