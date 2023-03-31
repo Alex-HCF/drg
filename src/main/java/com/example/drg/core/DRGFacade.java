@@ -16,19 +16,19 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class DRGFacade {
 
-    private final ExprEvaluator exprEvaluator;
-    private final ExprValidator exprValidator;
-    private final TemplateEngine templateEngine;
+  private final ExprEvaluator exprEvaluator;
+  private final ExprValidator exprValidator;
+  private final TemplateEngine templateEngine;
 
+  public byte[] renderDocument(
+      byte[] template, Map<String, String> params, List<String> exprs, XhtmlConverter converter) {
+    Map<String, Object> model = exprEvaluator.calcExprs(exprs, params);
+    return templateEngine.processTemplate(new Resource(template), model, converter);
+  }
 
-    public byte[] renderDocument(byte[] template, Map<String, String> params, List<String> exprs, XhtmlConverter converter) {
-        Map<String, Object> model = exprEvaluator.calcExprs(exprs, params);
-        return templateEngine.processTemplate(new Resource(template), model, converter);
-    }
-
-    public byte[] validate(byte[] template, Set<String> params, List<String> exprs, XhtmlConverter converter) {
-        Map<String, Object> validationModel = exprValidator.validateExprs(exprs, params);
-        return templateEngine.processTemplate(new Resource(template), validationModel, converter);
-    }
-
+  public byte[] validate(
+      byte[] template, Set<String> params, List<String> exprs, XhtmlConverter converter) {
+    Map<String, Object> validationModel = exprValidator.validateExprs(exprs, params);
+    return templateEngine.processTemplate(new Resource(template), validationModel, converter);
+  }
 }

@@ -4,5 +4,5 @@ import com.example.drg.core.template.Resource;
 
 public interface XhtmlConverter {
 
-    byte[] convert(String xhtml, Resource resource);
+  byte[] convert(String xhtml, Resource resource);
 }

@@ -21,37 +21,39 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @Import({DRGTestConfig.class})
 class DRGFacadeTest {
 
-    @Autowired
-    DRGFacade drgFacade;
+  @Autowired DRGFacade drgFacade;
 
-    @Test
-    void renderDocument() throws IOException {
-        byte[] archive = Files.readAllBytes(Path.of("src/test/resources/template.zip"));
-        Map<String, String> params = Map.of(
-                "first", "Hello",
-                "second", "world",
-                "third", "!!!");
-        List<String> exprs = List.of(
-                "currDate=currDate()",
-                "tableData = testEntityList(param('first'), param('second'), param('third'), int('5'))"
-        );
+  @Test
+  void renderDocument() throws IOException {
+    byte[] archive = Files.readAllBytes(Path.of("src/test/resources/template.zip"));
+    Map<String, String> params =
+        Map.of(
+            "first", "Hello",
+            "second", "world",
+            "third", "!!!");
+    List<String> exprs =
+        List.of(
+            "currDate=currDate()",
+            "tableData = testEntityList(param('first'), param('second'), param('third'), int('5'))");
 
-        assertDoesNotThrow(() -> drgFacade.renderDocument(archive, params, exprs, new PdfXhtmlConverter()));
-//        byte[] result = drgFacade.renderDocument(archive, params, exprs, new PdfXhtmlConverter());
-//        Files.write(Path.of("result.pdf"), result);
-    }
+    assertDoesNotThrow(
+        () -> drgFacade.renderDocument(archive, params, exprs, new PdfXhtmlConverter()));
+    //        byte[] result = drgFacade.renderDocument(archive, params, exprs, new
+    // PdfXhtmlConverter());
+    //        Files.write(Path.of("result.pdf"), result);
+  }
 
-    @Test
-    void validate() throws IOException {
-        byte[] archive = Files.readAllBytes(Path.of("src/test/resources/template.zip"));
-        Set<String> params = Set.of("first", "second", "third");
-        List<String> exprs = List.of(
-                "currDate=currDate()",
-                "tableData = testEntityList(param('first'), param('second'), param('third'), int('5'))"
-        );
+  @Test
+  void validate() throws IOException {
+    byte[] archive = Files.readAllBytes(Path.of("src/test/resources/template.zip"));
+    Set<String> params = Set.of("first", "second", "third");
+    List<String> exprs =
+        List.of(
+            "currDate=currDate()",
+            "tableData = testEntityList(param('first'), param('second'), param('third'), int('5'))");
 
-        assertDoesNotThrow(() -> drgFacade.validate(archive, params, exprs, new PdfXhtmlConverter()));
-//        byte[] result = drgFacade.validate(archive, params, exprs, new PdfXhtmlConverter());
-//        Files.write(Path.of("result.pdf"), result);
-    }
+    assertDoesNotThrow(() -> drgFacade.validate(archive, params, exprs, new PdfXhtmlConverter()));
+    //        byte[] result = drgFacade.validate(archive, params, exprs, new PdfXhtmlConverter());
+    //        Files.write(Path.of("result.pdf"), result);
+  }
 }

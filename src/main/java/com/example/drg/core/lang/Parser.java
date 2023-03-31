@@ -12,77 +12,77 @@ import java.util.List;
 @Slf4j
 public class Parser {
 
-    public ExprDescriptor parseExpr(List<Token> tokens) {
-        log.info("Starting parsing expr {}", tokens);
+  public ExprDescriptor parseExpr(List<Token> tokens) {
+    log.info("Starting parsing expr {}", tokens);
 
-        String varName = tokens.get(0).getValue();
+    String varName = tokens.get(0).getValue();
 
-        List<Token> funcTokens = tokens.subList(2, tokens.size());
-        FuncDescriptor func = parseFunc(funcTokens);
+    List<Token> funcTokens = tokens.subList(2, tokens.size());
+    FuncDescriptor func = parseFunc(funcTokens);
 
-        ExprDescriptor exprDescriptor = new ExprDescriptor(varName, func);
+    ExprDescriptor exprDescriptor = new ExprDescriptor(varName, func);
 
-        log.info("Parse result {}", exprDescriptor);
+    log.info("Parse result {}", exprDescriptor);
 
-        return exprDescriptor;
+    return exprDescriptor;
+  }
+
+  private FuncDescriptor parseFunc(List<Token> tokens) {
+    List<Object> args = new ArrayList<>();
+    String funcName = tokens.get(0).getValue();
+
+    int i = 2;
+    while (i < tokens.size()) {
+      Token token = tokens.get(i);
+      if (token.getType() == Token.Type.ARG) {
+        args.add(parseArg(token.getValue()));
+        i++;
+      } else if (token.getType() == Token.Type.FUNC_NAME) {
+        List<Token> leftTokens = tokens.subList(i, tokens.size());
+        List<Token> funcTokens = parseFuncTokens(leftTokens);
+        args.add(parseFunc(funcTokens));
+        i += funcTokens.size();
+      } else {
+        i++;
+      }
     }
 
-    private FuncDescriptor parseFunc(List<Token> tokens) {
-        List<Object> args = new ArrayList<>();
-        String funcName = tokens.get(0).getValue();
+    return new FuncDescriptor(funcName, args);
+  }
 
-        int i = 2;
-        while (i < tokens.size()) {
-            Token token = tokens.get(i);
-            if (token.getType() == Token.Type.ARG) {
-                args.add(parseArg(token.getValue()));
-                i++;
-            } else if (token.getType() == Token.Type.FUNC_NAME) {
-                List<Token> leftTokens = tokens.subList(i, tokens.size());
-                List<Token> funcTokens = parseFuncTokens(leftTokens);
-                args.add(parseFunc(funcTokens));
-                i += funcTokens.size();
-            } else {
-                i++;
-            }
+  private List<Token> parseFuncTokens(List<Token> tokens) {
+    int countOpenBracket = 0;
+
+    int i = 0;
+    while (i < tokens.size()) {
+      Token token = tokens.get(i);
+
+      if (token.getType() == Token.Type.OPEN_BRACKET) {
+        countOpenBracket++;
+      } else if (token.getType() == Token.Type.CLOSED_BRACKET) {
+        countOpenBracket--;
+        if (countOpenBracket < 0) {
+          throw new UnmatchedBracketException(token.getOriginalPosition());
         }
-
-        return new FuncDescriptor(funcName, args);
+      }
+      if (i > 1 && countOpenBracket == 0) {
+        break;
+      }
+      i++;
     }
 
-    private List<Token> parseFuncTokens(List<Token> tokens) {
-        int countOpenBracket = 0;
-
-        int i = 0;
-        while (i < tokens.size()) {
-            Token token = tokens.get(i);
-
-            if (token.getType() == Token.Type.OPEN_BRACKET) {
-                countOpenBracket++;
-            } else if (token.getType() == Token.Type.CLOSED_BRACKET) {
-                countOpenBracket--;
-                if (countOpenBracket < 0) {
-                    throw new UnmatchedBracketException(token.getOriginalPosition());
-                }
-            }
-            if (i > 1 && countOpenBracket == 0) {
-                break;
-            }
-            i++;
-        }
-
-        if (countOpenBracket > 0) {
-            throw new UnclosedBracketException(getPositionOfLastToken(tokens));
-        }
-
-        return tokens.subList(0, i + 1);
+    if (countOpenBracket > 0) {
+      throw new UnclosedBracketException(getPositionOfLastToken(tokens));
     }
 
-    private int getPositionOfLastToken(List<Token> tokens){
-        return tokens.get(tokens.size() - 1).getOriginalPosition();
-    }
+    return tokens.subList(0, i + 1);
+  }
 
-    private String parseArg(String arg) {
-        return arg.substring(1, arg.length() - 1);
-    }
+  private int getPositionOfLastToken(List<Token> tokens) {
+    return tokens.get(tokens.size() - 1).getOriginalPosition();
+  }
+
+  private String parseArg(String arg) {
+    return arg.substring(1, arg.length() - 1);
+  }
 }

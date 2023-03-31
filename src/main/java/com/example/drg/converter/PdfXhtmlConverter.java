@@ -13,31 +13,29 @@ import java.net.URL;
 
 @Service
 public class PdfXhtmlConverter implements XhtmlConverter {
-    @Override
-    public byte[] convert(String xhtml, Resource resources) {
-        ByteArrayOutputStream pdf = new ByteArrayOutputStream();
-        ConverterProperties converterProperties = new ConverterProperties();
-        converterProperties.setBaseUri("/");
-        converterProperties.setResourceRetriever(getCustomResourceRetriever(resources));
-        HtmlConverter.convertToPdf(xhtml, pdf, converterProperties);
-        return pdf.toByteArray();
-    }
+  @Override
+  public byte[] convert(String xhtml, Resource resources) {
+    ByteArrayOutputStream pdf = new ByteArrayOutputStream();
+    ConverterProperties converterProperties = new ConverterProperties();
+    converterProperties.setBaseUri("/");
+    converterProperties.setResourceRetriever(getCustomResourceRetriever(resources));
+    HtmlConverter.convertToPdf(xhtml, pdf, converterProperties);
+    return pdf.toByteArray();
+  }
 
-    private IResourceRetriever getCustomResourceRetriever(Resource resource) {
-        return new IResourceRetriever() {
-            @Override
-            public InputStream getInputStreamByUrl(URL url) {
-                throw new UnsupportedOperationException();
-            }
+  private IResourceRetriever getCustomResourceRetriever(Resource resource) {
+    return new IResourceRetriever() {
+      @Override
+      public InputStream getInputStreamByUrl(URL url) {
+        throw new UnsupportedOperationException();
+      }
 
-            @Override
-            public byte[] getByteArrayByUrl(URL url) {
-                String urlStr = url.getFile();
-                String path = urlStr.substring(urlStr.lastIndexOf("../") + 2);
-                return resource.getResource(path);
-            }
-        };
-    }
-
-
+      @Override
+      public byte[] getByteArrayByUrl(URL url) {
+        String urlStr = url.getFile();
+        String path = urlStr.substring(urlStr.lastIndexOf("../") + 2);
+        return resource.getResource(path);
+      }
+    };
+  }
 }

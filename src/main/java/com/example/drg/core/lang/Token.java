@@ -8,27 +8,27 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Token {
-    public enum Type {
-        VAR("[a-zA-Z0-9]*"),
-        EQUAL("="),
-        FUNC_NAME("[a-zA-Z0-9]*"),
-        OPEN_BRACKET("[(]"),
-        CLOSED_BRACKET("[)]"),
-        ARG("'[a-zA-Z0-9]*'"),
-        COMMA(",");
+  public enum Type {
+    VAR("[a-zA-Z0-9]*"),
+    EQUAL("="),
+    FUNC_NAME("[a-zA-Z0-9]*"),
+    OPEN_BRACKET("[(]"),
+    CLOSED_BRACKET("[)]"),
+    ARG("'[a-zA-Z0-9]*'"),
+    COMMA(",");
 
-        private final String regex;
+    private final String regex;
 
-        public String getRegex() {
-            return regex;
-        }
-
-        Type(String regex) {
-            this.regex = regex;
-        }
+    public String getRegex() {
+      return regex;
     }
 
-    Type type;
-    String value;
-    int originalPosition;
+    Type(String regex) {
+      this.regex = regex;
+    }
+  }
+
+  Type type;
+  String value;
+  int originalPosition;
 }

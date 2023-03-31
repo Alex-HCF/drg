@@ -6,13 +6,13 @@ import java.util.Set;
 
 public interface MetaFunction<T> {
 
-    T compute(Map<String, String> params, List<?> args);
+  T compute(Map<String, String> params, List<?> args);
 
-    String getMetaAlias();
+  String getMetaAlias();
 
-    Class<T> getReturnedType();
+  Class<T> getReturnedType();
 
-    T getTestValue();
+  T getTestValue();
 
-    void validateInput(List<Class<?>> argTypes, Set<String> params);
+  void validateInput(List<Class<?>> argTypes, Set<String> params);
 }

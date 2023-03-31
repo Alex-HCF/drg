@@ -11,52 +11,48 @@ import java.util.*;
 @TestConfiguration
 public class DRGTestConfig {
 
-    @AllArgsConstructor
-    @Getter
-    public static class TestEntity {
-        private String firstField;
-        private String secondField;
-        private String thirdField;
-    }
+  @AllArgsConstructor
+  @Getter
+  public static class TestEntity {
+    private String firstField;
+    private String secondField;
+    private String thirdField;
+  }
 
-    @Bean
-    MetaFunction<List<TestEntity>> getTestMetaFunction() {
-        return new MetaFunction<>() {
-            @Override
-            public List<TestEntity> compute(Map<String, String> params, List<?> args) {
-                String firstField = (String) args.get(0);
-                String secondField = (String) args.get(1);
-                String thirdField = (String) args.get(2);
-                TestEntity testEntity = new TestEntity(firstField, secondField, thirdField);
+  @Bean
+  MetaFunction<List<TestEntity>> getTestMetaFunction() {
+    return new MetaFunction<>() {
+      @Override
+      public List<TestEntity> compute(Map<String, String> params, List<?> args) {
+        String firstField = (String) args.get(0);
+        String secondField = (String) args.get(1);
+        String thirdField = (String) args.get(2);
+        TestEntity testEntity = new TestEntity(firstField, secondField, thirdField);
 
-                int copyCount = (int) args.get(3);
+        int copyCount = (int) args.get(3);
 
-                return Collections.nCopies(copyCount, testEntity);
-            }
+        return Collections.nCopies(copyCount, testEntity);
+      }
 
-            @Override
-            public String getMetaAlias() {
-                return "testEntityList";
-            }
+      @Override
+      public String getMetaAlias() {
+        return "testEntityList";
+      }
 
-            @Override
-            public Class<List<TestEntity>> getReturnedType() {
-                List<TestEntity> testEntityList = new ArrayList<>();
-                return (Class<List<TestEntity>>) testEntityList.getClass();
-            }
+      @Override
+      public Class<List<TestEntity>> getReturnedType() {
+        List<TestEntity> testEntityList = new ArrayList<>();
+        return (Class<List<TestEntity>>) testEntityList.getClass();
+      }
 
-            @Override
-            public List<TestEntity> getTestValue() {
-                TestEntity testEntity = new TestEntity("firstField", "secondField", "thirdField");
-                return Collections.nCopies(3, testEntity);
-            }
+      @Override
+      public List<TestEntity> getTestValue() {
+        TestEntity testEntity = new TestEntity("firstField", "secondField", "thirdField");
+        return Collections.nCopies(3, testEntity);
+      }
 
-            @Override
-            public void validateInput(List<Class<?>> argTypes, Set<String> params) {
-
-            }
-        };
-    }
-
-
+      @Override
+      public void validateInput(List<Class<?>> argTypes, Set<String> params) {}
+    };
+  }
 }
