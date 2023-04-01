@@ -1,10 +1,13 @@
 package com.example.drg.core.lang;
 
+import com.example.drg.core.exception.UnclosedBracketException;
+import com.example.drg.core.exception.UnmatchedBracketException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParserTest {
   Parser parser = new Parser();
@@ -18,6 +21,22 @@ class ParserTest {
     ExprDescriptor exprDescriptor = parser.parseExpr(result);
 
     assertThat(exprDescriptor).usingRecursiveComparison().isEqualTo(getExprDescriptor());
+  }
+
+  @Test
+  void should_throwException_when_unmatchedBracket() {
+    String expr = "  var1 = func1())   ";
+    List<Token> result = tokenizer.analysisExpr(expr);
+
+    assertThrows(UnmatchedBracketException.class, () -> parser.parseExpr(result));
+  }
+
+  @Test
+  void should_throwException_when_unclosedBracket() {
+    String expr = "  var1 = func1(   ";
+    List<Token> result = tokenizer.analysisExpr(expr);
+
+    assertThrows(UnclosedBracketException.class, () -> parser.parseExpr(result));
   }
 
   ExprDescriptor getExprDescriptor() {

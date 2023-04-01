@@ -3,6 +3,7 @@ package com.example.drg.core;
 import com.example.drg.DRGConfig;
 import com.example.drg.DRGTestConfig;
 import com.example.drg.converter.PdfXhtmlConverter;
+import com.example.drg.core.exception.EvaluatorException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest(classes = DRGConfig.class)
 @Import({DRGTestConfig.class})
@@ -41,6 +43,24 @@ class DRGFacadeTest {
     //        byte[] result = drgFacade.renderDocument(archive, params, exprs, new
     // PdfXhtmlConverter());
     //        Files.write(Path.of("result.pdf"), result);
+  }
+
+  @Test
+  void should_throwException_when_invalidExprs() throws IOException {
+    byte[] archive = Files.readAllBytes(Path.of("src/test/resources/template.zip"));
+    Map<String, Object> params =
+        Map.of(
+            "first", "Hello",
+            "second", "world",
+            "third", "!!!");
+    List<String> exprs =
+        List.of(
+            "currDate=currDate(()",
+            "tableData = testEntityList(param('first'), param('second'), param('third'), int('5'))");
+
+    assertThrows(
+        EvaluatorException.class,
+        () -> drgFacade.renderDocument(archive, params, exprs, new PdfXhtmlConverter()));
   }
 
   @Test
