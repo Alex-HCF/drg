@@ -12,12 +12,14 @@ import java.util.List;
 @Slf4j
 public class Parser {
 
+  private static final int ARG_START_IND = 2;
+
   public ExprDescriptor parseExpr(List<Token> tokens) {
     log.info("Starting parsing expr {}", tokens);
 
-    String varName = tokens.get(0).getValue();
+    String varName = parseVarName(tokens);
 
-    List<Token> funcTokens = tokens.subList(2, tokens.size());
+    List<Token> funcTokens = parseFirstFunctionTokens(tokens);
     FuncDescriptor func = parseFunc(funcTokens);
 
     ExprDescriptor exprDescriptor = new ExprDescriptor(varName, func);
@@ -27,19 +29,27 @@ public class Parser {
     return exprDescriptor;
   }
 
+  private String parseVarName(List<Token> tokens) {
+    return tokens.get(0).getValue();
+  }
+
+  private List<Token> parseFirstFunctionTokens(List<Token> tokens) {
+    return tokens.subList(2, tokens.size());
+  }
+
   private FuncDescriptor parseFunc(List<Token> tokens) {
     List<Object> args = new ArrayList<>();
-    String funcName = tokens.get(0).getValue();
+    String funcName = parseFuncName(tokens);
 
-    int i = 2;
+    int i = ARG_START_IND;
     while (i < tokens.size()) {
       Token token = tokens.get(i);
       if (token.getType() == Token.Type.ARG) {
         args.add(parseArg(token.getValue()));
         i++;
       } else if (token.getType() == Token.Type.FUNC_NAME) {
-        List<Token> leftTokens = tokens.subList(i, tokens.size());
-        List<Token> funcTokens = parseFuncTokens(leftTokens);
+        List<Token> remainingTokens = parseRemainingTokens(tokens, i);
+        List<Token> funcTokens = parseFuncTokens(remainingTokens);
         args.add(parseFunc(funcTokens));
         i += funcTokens.size();
       } else {
@@ -48,6 +58,14 @@ public class Parser {
     }
 
     return new FuncDescriptor(funcName, args);
+  }
+
+  private String parseFuncName(List<Token> tokens) {
+    return tokens.get(0).getValue();
+  }
+
+  private List<Token> parseRemainingTokens(List<Token> tokens, int startPos) {
+    return tokens.subList(startPos, tokens.size());
   }
 
   private List<Token> parseFuncTokens(List<Token> tokens) {
@@ -61,21 +79,33 @@ public class Parser {
         countOpenBracket++;
       } else if (token.getType() == Token.Type.CLOSED_BRACKET) {
         countOpenBracket--;
-        if (countOpenBracket < 0) {
+        if (isUnmatchedBracket(countOpenBracket)) {
           throw new UnmatchedBracketException(token.getOriginalPosition());
         }
       }
-      if (i > 1 && countOpenBracket == 0) {
+      if (isEndOfFunc(i, countOpenBracket)) {
         break;
       }
       i++;
     }
 
-    if (countOpenBracket > 0) {
+    if (isUnclosedBracket(countOpenBracket)) {
       throw new UnclosedBracketException(getPositionOfLastToken(tokens));
     }
 
     return tokens.subList(0, i + 1);
+  }
+
+  private boolean isEndOfFunc(int position, int countOpenBracket) {
+    return position > 1 && countOpenBracket == 0;
+  }
+
+  private boolean isUnmatchedBracket(int countOpenBracket) {
+    return countOpenBracket < 0;
+  }
+
+  private boolean isUnclosedBracket(int countOpenBracket) {
+    return countOpenBracket > 0;
   }
 
   private int getPositionOfLastToken(List<Token> tokens) {

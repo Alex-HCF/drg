@@ -19,13 +19,13 @@ public class ExprEvaluator {
   private final Tokenizer tokenizer;
   private final Parser parser;
 
-  public Map<String, Object> calcExprs(List<String> exprs, Map<String, String> params) {
+  public Map<String, Object> calcExprs(List<String> exprs, Map<String, Object> params) {
     return exprs.stream()
         .map(e -> calcExpr(e, params))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 
-  private Map.Entry<String, Object> calcExpr(String expr, Map<String, String> params) {
+  private Map.Entry<String, Object> calcExpr(String expr, Map<String, Object> params) {
     try {
       List<Token> tokens = tokenizer.analysisExpr(expr);
       ExprDescriptor exprDescriptor = parser.parseExpr(tokens);
@@ -36,7 +36,7 @@ public class ExprEvaluator {
     }
   }
 
-  private Object calcFunc(FuncDescriptor funcDescriptor, Map<String, String> params) {
+  private Object calcFunc(FuncDescriptor funcDescriptor, Map<String, Object> params) {
     MetaFunction<?> metaFunction = metaConfig.getMetaFunction(funcDescriptor.getFuncName());
     List<Object> processedArgs =
         funcDescriptor.getArgs().stream()
@@ -50,7 +50,7 @@ public class ExprEvaluator {
     return metaFunction.compute(params, processedArgs);
   }
 
-  private Object processArg(Object arg, Map<String, String> params) {
+  private Object processArg(Object arg, Map<String, Object> params) {
     return arg instanceof FuncDescriptor ? calcFunc((FuncDescriptor) arg, params) : arg;
   }
 }

@@ -12,7 +12,7 @@ import java.util.Set;
 public class DoubleMF implements MetaFunction<Double> {
 
   @Override
-  public Double compute(Map<String, String> params, List<?> args) {
+  public Double compute(Map<String, Object> params, List<?> args) {
     return Double.parseDouble((String) args.get(0));
   }
 

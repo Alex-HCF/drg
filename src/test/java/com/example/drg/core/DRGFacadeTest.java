@@ -24,9 +24,9 @@ class DRGFacadeTest {
   @Autowired DRGFacade drgFacade;
 
   @Test
-  void renderDocument() throws IOException {
+  void should_returnDocument_when_validArgs() throws IOException {
     byte[] archive = Files.readAllBytes(Path.of("src/test/resources/template.zip"));
-    Map<String, String> params =
+    Map<String, Object> params =
         Map.of(
             "first", "Hello",
             "second", "world",
@@ -44,7 +44,7 @@ class DRGFacadeTest {
   }
 
   @Test
-  void validate() throws IOException {
+  void should_returnExampleDocument_when_validArgs() throws IOException {
     byte[] archive = Files.readAllBytes(Path.of("src/test/resources/template.zip"));
     Set<String> params = Set.of("first", "second", "third");
     List<String> exprs =

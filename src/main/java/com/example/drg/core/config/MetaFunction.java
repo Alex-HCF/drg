@@ -6,7 +6,7 @@ import java.util.Set;
 
 public interface MetaFunction<T> {
 
-  T compute(Map<String, String> params, List<?> args);
+  T compute(Map<String, Object> params, List<?> args);
 
   String getMetaAlias();
 

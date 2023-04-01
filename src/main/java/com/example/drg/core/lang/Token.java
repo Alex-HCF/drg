@@ -28,7 +28,7 @@ public class Token {
     }
   }
 
-  Type type;
-  String value;
-  int originalPosition;
+  private final Type type;
+  private final String value;
+  private final int originalPosition;
 }

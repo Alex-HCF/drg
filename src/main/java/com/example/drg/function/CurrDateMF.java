@@ -12,7 +12,7 @@ import java.util.Set;
 @Component
 public class CurrDateMF implements MetaFunction<Date> {
   @Override
-  public Date compute(Map<String, String> params, List<?> args) {
+  public Date compute(Map<String, Object> params, List<?> args) {
     return new Date();
   }
 

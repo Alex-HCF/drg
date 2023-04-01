@@ -11,7 +11,7 @@ class ParserTest {
   Tokenizer tokenizer = new Tokenizer();
 
   @Test
-  void parseExpr() {
+  void should_returnExprDescriptor_when_validTokens() {
     String expr = "  var1 = func1('hello', func2 ('bye'), func3 ())   ";
     List<Token> result = tokenizer.analysisExpr(expr);
 

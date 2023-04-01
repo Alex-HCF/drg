@@ -8,6 +8,8 @@ public class Resource {
   private final byte[] templateArchive;
   private final Map<String, byte[]> files;
 
+  private static final String TEMPLATE_NAME = "template.html";
+
   public Resource(byte[] templateArchive) {
     this.templateArchive = templateArchive;
     files = ZipMetaUtils.unzip(templateArchive);
@@ -18,7 +20,7 @@ public class Resource {
   }
 
   public byte[] getHtmlTemplate() {
-    return files.get("template.html");
+    return files.get(TEMPLATE_NAME);
   }
 
   public byte[] getTemplateArchive() {

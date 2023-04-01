@@ -12,7 +12,7 @@ import java.util.Set;
 public class IntMF implements MetaFunction<Integer> {
 
   @Override
-  public Integer compute(Map<String, String> params, List<?> args) {
+  public Integer compute(Map<String, Object> params, List<?> args) {
     return Integer.parseInt((String) args.get(0));
   }
 

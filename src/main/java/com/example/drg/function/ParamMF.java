@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.Set;
 
 @Component
-public class ParamMF implements MetaFunction<String> {
+public class ParamMF implements MetaFunction<Object> {
   @Override
-  public String compute(Map<String, String> params, List<?> args) {
+  public Object compute(Map<String, Object> params, List<?> args) {
     return params.get(args.get(0));
   }
 
@@ -21,8 +21,8 @@ public class ParamMF implements MetaFunction<String> {
   }
 
   @Override
-  public Class<String> getReturnedType() {
-    return String.class;
+  public Class<Object> getReturnedType() {
+    return Object.class;
   }
 
   @Override

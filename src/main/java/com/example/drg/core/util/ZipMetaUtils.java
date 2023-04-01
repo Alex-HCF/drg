@@ -13,6 +13,10 @@ import java.util.zip.ZipInputStream;
 @UtilityClass
 public class ZipMetaUtils {
 
+  /**
+   * @param templateArchive - zip archive
+   * @return unzip files in the format <relative path>:<file>
+   */
   public Map<String, byte[]> unzip(byte[] templateArchive) {
     Map<String, byte[]> result = new HashMap<>();
 

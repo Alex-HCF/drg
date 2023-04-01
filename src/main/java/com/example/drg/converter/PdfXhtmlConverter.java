@@ -33,9 +33,14 @@ public class PdfXhtmlConverter implements XhtmlConverter {
       @Override
       public byte[] getByteArrayByUrl(URL url) {
         String urlStr = url.getFile();
-        String path = urlStr.substring(urlStr.lastIndexOf("../") + 2);
+        String path = computePath(urlStr);
         return resource.getResource(path);
       }
     };
   }
+
+  private String computePath(String url){
+    return url.substring(url.lastIndexOf("../") + 2);
+  }
+
 }

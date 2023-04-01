@@ -8,6 +8,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ExprDescriptor {
-  String varName;
-  FuncDescriptor funcDescriptor;
+  private final String varName;
+  private final FuncDescriptor funcDescriptor;
 }

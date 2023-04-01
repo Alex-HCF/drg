@@ -14,16 +14,16 @@ public class DRGTestConfig {
   @AllArgsConstructor
   @Getter
   public static class TestEntity {
-    private String firstField;
-    private String secondField;
-    private String thirdField;
+    private final String firstField;
+    private final String secondField;
+    private final String thirdField;
   }
 
   @Bean
   MetaFunction<List<TestEntity>> getTestMetaFunction() {
     return new MetaFunction<>() {
       @Override
-      public List<TestEntity> compute(Map<String, String> params, List<?> args) {
+      public List<TestEntity> compute(Map<String, Object> params, List<?> args) {
         String firstField = (String) args.get(0);
         String secondField = (String) args.get(1);
         String thirdField = (String) args.get(2);

@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class FuncDescriptor {
-  String funcName;
-  List<?> args;
+  private final String funcName;
+  private final List<?> args;
 }

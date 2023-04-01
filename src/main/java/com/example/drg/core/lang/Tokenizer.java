@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class Tokenizer {
 
-  private final Map<Token.Type, List<Token.Type>> order =
+  private static final Map<Token.Type, List<Token.Type>> TOKEN_ORDER =
       Map.of(
           Token.Type.VAR, List.of(Token.Type.EQUAL),
           Token.Type.EQUAL, List.of(Token.Type.FUNC_NAME),
@@ -25,6 +25,8 @@ public class Tokenizer {
           Token.Type.COMMA, List.of(Token.Type.FUNC_NAME, Token.Type.ARG),
           Token.Type.CLOSED_BRACKET, List.of(Token.Type.CLOSED_BRACKET, Token.Type.COMMA));
 
+  private static final List<Character> SKIPPED_CHARS = List.of(' ');
+
   public List<Token> analysisExpr(String expr) {
     log.info("Starting analysis expr {}", expr);
 
@@ -32,21 +34,29 @@ public class Tokenizer {
     List<Token.Type> expected = List.of(Token.Type.VAR);
     int i = 0;
     while (i < expr.length()) {
-      if (expr.charAt(i) == ' ') {
+      if (isSkippedChar(expr.charAt(i))) {
         i++;
         continue;
       }
 
       Token token = parseTokenOrThrow(expr, expected, i);
       tokens.add(token);
-      expected = order.get(token.getType());
+      expected = TOKEN_ORDER.get(token.getType());
 
-      i += token.getValue().length();
+      i = computeNewInd(token, i);
     }
 
     log.info("Analysis result {}", tokens);
 
     return tokens;
+  }
+
+  private boolean isSkippedChar(char c) {
+    return SKIPPED_CHARS.contains(c);
+  }
+
+  private int computeNewInd(Token token, int currInd) {
+    return currInd + token.getValue().length();
   }
 
   private Token parseTokenOrThrow(String expr, List<Token.Type> expectedTypes, int startPos) {
@@ -60,12 +70,20 @@ public class Tokenizer {
         expectedTypes.stream()
             .filter(type -> expr.matches(type.getRegex()))
             .collect(Collectors.toList());
-    if (matches.size() == 1) { // found
+    if (isTokenFound(matches)) {
       return Optional.of(new Token(matches.get(0), expr, startPos));
-    } else if (matches.isEmpty() && expr.length() >= 2) {
+    } else if (continueSearch(expr, matches)) {
       return parseToken(expr.substring(0, expr.length() - 1), expectedTypes, startPos);
     } else {
       return Optional.empty();
     }
+  }
+
+  private boolean isTokenFound(List<Token.Type> matches) {
+    return matches.size() == 1;
+  }
+
+  private boolean continueSearch(String expr, List<Token.Type> matches) {
+    return matches.isEmpty() && expr.length() >= 2;
   }
 }

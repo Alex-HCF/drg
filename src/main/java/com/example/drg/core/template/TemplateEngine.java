@@ -10,10 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.parser.Parser;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -40,14 +37,19 @@ public class TemplateEngine {
         new Template(
             "", new StringReader(new String(template, StandardCharsets.UTF_8)), FREEMARKER_CONFIG);
 
-    ByteArrayOutputStream processedHtml = new ByteArrayOutputStream();
-    freemarkerTemplate.process(model, new OutputStreamWriter(processedHtml));
+    ByteArrayOutputStream processedHtml = processHtml(freemarkerTemplate, model);
 
     return prepareHtml(processedHtml.toString(StandardCharsets.UTF_8));
   }
 
+  private ByteArrayOutputStream processHtml(Template template, Map<String, ?> model) throws TemplateException, IOException {
+    ByteArrayOutputStream processedHtml = new ByteArrayOutputStream();
+    template.process(model, new OutputStreamWriter(processedHtml));
+    return processedHtml;
+  }
+
   private String prepareHtml(String html) {
-    final Document document = Jsoup.parse(html);
+    Document document = Jsoup.parse(html);
     document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
     return Parser.unescapeEntities(document.html(), true);
   }
